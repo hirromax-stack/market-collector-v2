@@ -1,0 +1,14 @@
+cat > render.yaml << 'EOF'
+services:
+  - type: web
+    name: market-data-collector
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: EMAIL_PASSWORD
+        sync: false
+    numInstances: 1
+    healthCheckPath: /
+    autoDeploy: true
+EOF

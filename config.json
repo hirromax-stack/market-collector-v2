@@ -1,0 +1,88 @@
+cat > config.json << 'EOF'
+{
+    "execution_times": [
+        "14:23",
+        "17:30", 
+        "23:44"
+    ],
+    "email_settings": {
+        "enabled": true,
+        "sender": "spreadlab.trading@gmail.com",
+        "password": "",
+        "receivers": [
+            "hirromax@gmail.com"
+        ],
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587
+    },
+    "symbols": {
+        "indices": [
+            "^GSPC",
+            "^DJI", 
+            "^IXIC",
+            "^RUT",
+            "^FTSE",
+            "^FCHI", 
+            "^GDAXI",
+            "^N225"
+        ],
+        "metaux_precieux": [
+            "GC=F",
+            "SI=F",
+            "PL=F", 
+            "PA=F"
+        ],
+        "metaux_industriels": [
+            "HG=F",
+            "ALI=F"
+        ],
+        "energies": [
+            "CL=F",
+            "BZ=F",
+            "NG=F"
+        ],
+        "matieres_premieres": [
+            "ZC=F",
+            "ZS=F",
+            "ZW=F",
+            "KC=F", 
+            "CC=F"
+        ],
+        "devises": [
+            "EURUSD=X",
+            "GBPUSD=X",
+            "USDJPY=X",
+            "AUDUSD=X",
+            "USDCAD=X"
+        ],
+        "etf": [
+            "SPY",
+            "QQQ",
+            "DIA",
+            "IWM",
+            "TLT",
+            "GLD",
+            "SLV", 
+            "USO"
+        ],
+        "crypto": [
+            "BTC-USD",
+            "ETH-USD",
+            "BNB-USD",
+            "XRP-USD",
+            "ADA-USD"
+        ],
+        "actions": [
+            "AAPL",
+            "MSFT",
+            "GOOGL",
+            "AMZN",
+            "TSLA",
+            "NVDA",
+            "META"
+        ]
+    },
+    "risk_free_rate": 0.04,
+    "timezone": "UTC"
+}
+EOF
