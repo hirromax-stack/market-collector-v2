@@ -3,7 +3,7 @@ cat > config.json << 'EOF'
     "execution_times": [
         "14:23",
         "17:30", 
-        "23:44"
+        "00:12"
     ],
     "email_settings": {
         "enabled": true,
