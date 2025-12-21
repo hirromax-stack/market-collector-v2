@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+
 
 WORKDIR /app
 
@@ -14,5 +14,3 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app
-
-CMD ["python", "market_collector.py"]
