@@ -18,6 +18,10 @@ def fetch_prices(symbols):
     return data
 
 def main():
+print("=" * 60)
+print("📊 Market Collector started")
+print("=" * 60)
+
     config = load_config()
     all_symbols = []
 
@@ -29,6 +33,9 @@ def main():
     print(f"\n📊 Market Snapshot — {datetime.utcnow()} UTC\n")
     for symbol, price in prices.items():
         print(f"{symbol:<10} {price}")
+print("=" * 60)
+print("✅ Market Collector finished successfully")
+print("=" * 60)
 
 if __name__ == "__main__":
     main()
