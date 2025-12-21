@@ -1,4 +1,4 @@
-cat > config.json << 'EOF'
+
 {
     "execution_times": [
         "14:23",
@@ -85,4 +85,3 @@ cat > config.json << 'EOF'
     "risk_free_rate": 0.04,
     "timezone": "UTC"
 }
-EOF
