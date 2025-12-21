@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats - Market Collector</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        table { width: 100%; background: white; border-collapse: collapse; border-radius: 10px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 0.85em; }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .btn { background: #2563eb; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Historique des exécutions</h1>
+            <a href="/admin" class="btn">← Retour au dashboard</a>
+        </header>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                    <th>Détails</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in history %}
+                <tr>
+                    <td>{{ event.timestamp[:19] }}</td>
+                    <td>{{ event.type }}</td>
+                    <td>{{ event.action or event.endpoint or 'N/A' }}</td>
+                    <td>
+                        {% if event.recipients %}
+                            Destinataires: {{ event.recipients|join(', ') }}
+                        {% elif event.error %}
+                            Erreur: {{ event.error }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if event.status == 'success' or event.status == 'sent' %}
+                        <span class="status-badge success">Succès</span>
+                        {% elif event.status == 'error' %}
+                        <span class="status-badge error">Erreur</span>
+                        {% else %}
+                        <span class="status-badge">{{ event.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
