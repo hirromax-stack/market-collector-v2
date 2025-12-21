@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Collector - Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 { color: #2563eb; margin-bottom: 10px; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2563eb;
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover { background: #1d4ed8; }
+        .btn-success { background: #10b981; }
+        .btn-warning { background: #f59e0b; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+        
+        .status-success { background: #d1fae5; color: #065f46; }
+        .status-error { background: #fee2e2; color: #991b1b; }
+        
+        .nav-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Dashboard Market Collector</h1>
+            <p>Gestion et surveillance de votre collecteur de données financières</p>
+        </header>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="number">{{ stats.total_api_calls }}</span>
+                <p>Appels API</p>
+            </div>
+            <div class="stat-card">
+                <span class="number">{{ stats.successful_emails }}</span>
+                <p>Emails envoyés</p>
+            </div>
+            <div class="stat-card">
+                <span class="number">{{ config.email_schedule }}</span>
+                <p>Prochain envoi</p>
+            </div>
+            <div class="stat-card">
+                <span class="number">{{ history|length }}</span>
+                <p>Événements récents</p>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="tab active" onclick="switchTab('overview')">Aperçu</div>
+            <div class="tab" onclick="switchTab('schedule')">Planification</div>
+            <div class="tab" onclick="switchTab('results')">Résultats</div>
+        </div>
+        
+        <!-- Onglet Aperçu -->
+        <div id="overview" class="tab-content active card">
+            <div class="card-header">
+                <h2>Configuration actuelle</h2>
+                <a href="/admin/schedule" class="btn">Modifier</a>
+            </div>
+            
+            <table>
+                <tr>
+                    <td><strong>Heure d'envoi :</strong></td>
+                    <td>{{ config.email_schedule }} ({{ config.timezone }})</td>
+                </tr>
+                <tr>
+                    <td><strong>Statut :</strong></td>
+                    <td>
+                        {% if config.email_enabled %}
+                        <span class="status-badge status-success">Activé</span>
+                        {% else %}
+                        <span class="status-badge status-error">Désactivé</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Destinataires :</strong></td>
+                    <td>{{ config.email_recipients|length }} adresse(s)</td>
+                </tr>
+                <tr>
+                    <td><strong>Dernière exécution :</strong></td>
+                    <td>{{ stats.last_run }}</td>
+                </tr>
+            </table>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn btn-success" onclick="testEmail()">
+                    Tester l'envoi d'email
+                </button>
+                <a href="/admin/results" class="btn" style="margin-left: 10px;">
+                    Voir l'historique complet
+                </a>
+            </div>
+        </div>
+        
+        <!-- Onglet Résultats -->
+        <div id="results" class="tab-content card">
+            <div class="card-header">
+                <h2>Derniers événements</h2>
+                <a href="/admin/results" class="btn">Voir tout</a>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in history %}
+                    <tr>
+                        <td>{{ event.timestamp[:19] }}</td>
+                        <td>{{ event.type }}</td>
+                        <td>{{ event.action or event.endpoint or 'N/A' }}</td>
+                        <td>
+                            {% if event.status == 'success' or event.status == 'sent' %}
+                            <span class="status-badge status-success">Succès</span>
+                            {% elif event.status == 'error' %}
+                            <span class="status-badge status-error">Erreur</span>
+                            {% else %}
+                            <span class="status-badge">{{ event.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tabName) {
+            // Cacher tous les onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Afficher l'onglet sélectionné
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        function testEmail() {
+            fetch('/admin/test-email', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Email de test envoyé !');
+                    location.reload();
+                })
+                .catch(error => {
+                    alert('Erreur: ' + error);
+                });
+        }
+    </script>
+</body>
+</html>
