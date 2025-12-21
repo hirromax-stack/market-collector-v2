@@ -1,41 +1,44 @@
+from flask import Flask
 import json
 import yfinance as yf
-from datetime import datetime
+import pandas as pd
+import traceback
+from datetime import datetime, timezone
+from pathlib import Path
 
+app = Flask(__name__)
 CONFIG_FILE = "config.json"
 
 def load_config():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
 
-def fetch_prices(symbols):
-    data = {}
-    for symbol in symbols:
-        ticker = yf.Ticker(symbol)
-        price = ticker.history(period="1d")["Close"]
-        if not price.empty:
-            data[symbol] = round(price.iloc[-1], 4)
-    return data
-
-def main():
-print("=" * 60)
-print("📊 Market Collector started")
-print("=" * 60)
-
-    config = load_config()
-    all_symbols = []
-
-    for category in config["symbols"].values():
-        all_symbols.extend(category)
-
-    prices = fetch_prices(all_symbols)
-
-    print(f"\n📊 Market Snapshot — {datetime.utcnow()} UTC\n")
-    for symbol, price in prices.items():
-        print(f"{symbol:<10} {price}")
-print("=" * 60)
-print("✅ Market Collector finished successfully")
-print("=" * 60)
+@app.route('/')
+def run_collector():
+    try:
+        config = load_config()
+        symbols = []
+        for group in config["symbols"].values():
+            symbols.extend(group)
+        
+        # Logique simplifiée pour l'exemple
+        data = []
+        for symbol in symbols[:3]:  # Limité pour la démo
+            ticker = yf.Ticker(symbol)
+            hist = ticker.history(period="1d")
+            if not hist.empty:
+                data.append({
+                    "symbol": symbol,
+                    "price": round(hist["Close"].iloc[-1], 2)
+                })
+        
+        return {
+            "status": "success",
+            "data": data,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500
 
 if __name__ == "__main__":
-    main()
+    app.run(host="0.0.0.0", port=int(5000))
