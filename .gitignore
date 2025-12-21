@@ -1,36 +1,22 @@
-echo # Python > .gitignore
-echo __pycache__/ >> .gitignore
-echo *.pyc >> .gitignore
-echo *.pyo >> .gitignore
-echo *.pyd >> .gitignore
-echo .Python >> .gitignore
-echo env/ >> .gitignore
-echo venv/ >> .gitignore
-echo .venv/ >> .gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+venv/
 
-echo # Donnees generees >> .gitignore
-echo data/ >> .gitignore
-echo logs/ >> .gitignore
-echo *.csv >> .gitignore
-echo *.xlsx >> .gitignore
-echo *.log >> .gitignore
+# Logs
+*.log
 
-echo # Environnement >> .gitignore
-echo .env >> .gitignore
-echo .env.local >> .gitignore
-echo .env.development.local >> .gitignore
-echo .env.test.local >> .gitignore
-echo .env.production.local >> .gitignore
+# OS
+.DS_Store
+Thumbs.db
 
-echo # IDE >> .gitignore
-echo .vscode/ >> .gitignore
-echo .idea/ >> .gitignore
-echo *.swp >> .gitignore
-echo *.swo >> .gitignore
+# Docker
+*.pid
 
-echo # Systeme >> .gitignore
-echo .DS_Store >> .gitignore
-echo Thumbs.db >> .gitignore
-
-echo # Docker >> .gitignore
-echo *.dockerignore >> .gitignore
+# IDE
+.vscode/
+.idea/
